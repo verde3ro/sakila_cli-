@@ -13,6 +13,10 @@ public class CountryBean implements Serializable {
 	public CountryBean() {
 	}
 
+	public CountryBean(Integer countryId) {
+		this.countryId = countryId;
+	}
+
 	public CountryBean(Integer countryId, String country, Date lastUpdate) {
 		this.countryId = countryId;
 		this.country = country;
