@@ -115,7 +115,7 @@ public class CityDao {
 			String sql = "INSERT INTO city (city, country_id, last_update) VALUES (?,?,?)";
 			conexion.connectar();
 			// MYSQL y SQL SERVER
-			try(PreparedStatement ps = conexion.getConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+			try (PreparedStatement ps = conexion.getConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 				ps.setString(1, cityBean.getCity());
 				ps.setInt(2, cityBean.getCountry().getCountryId());
 				ps.setDate(3, new java.sql.Date(cityBean.getLastUpdate().getTime()));
@@ -148,19 +148,26 @@ public class CityDao {
 		Conexion conexion = null;
 
 		try {
+			int registros;
 			conexion = new Conexion();
 			String sql = "UPDATE city SET city = ?, country_id = ?, last_update = ? WHERE city_id = ?";
 			conexion.connectar();
 			// MYSQL y SQL SERVER
-			try(PreparedStatement ps = conexion.getConnection().prepareStatement(sql)) {
+			try (PreparedStatement ps = conexion.getConnection().prepareStatement(sql)) {
 				ps.setString(1, cityBean.getCity());
 				ps.setInt(2, cityBean.getCountry().getCountryId());
 				ps.setDate(3, new java.sql.Date(cityBean.getLastUpdate().getTime()));
 				ps.setInt(4, cityBean.getCityId());
-				ps.executeUpdate(); // Para insert y update
+				registros = ps.executeUpdate(); // Para insert y update
+
+				if (registros == 0) {
+					throw new InternalException(String.format("El id %d no se encuentra registrado en la base de datos", cityBean.getCityId()));
+				}
 			}
 
 			return cityBean;
+		} catch (InternalException ex) {
+			throw ex;
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			throw new InternalException("Ocurrió un error al actulizar los datos de la ciudad");
