@@ -11,7 +11,7 @@ public class Actualizar {
     public static void main(String[] args) {
         try {
             CityBo cityBo = new CityBo();
-            CityBean cityBean = cityBo.actualizar(601, "Celaya", 50, new Date());
+            CityBean cityBean = cityBo.actualizar(6000, "León", 50, new Date());
 
             System.out.println(cityBean);
         } catch (InternalException ex) {

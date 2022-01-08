@@ -5,6 +5,8 @@ import com.appstracta.bean.CountryBean;
 import com.appstracta.dao.CityDao;
 import com.appstracta.exceptions.InternalException;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
@@ -63,6 +65,34 @@ public class CityBo {
 			}
 		} else {
 			throw new InternalException("La ciudad y el id de pais no deben ser nulos o vaciós.");
+		}
+	}
+
+	public Integer borrar (Integer cityId) throws InternalException {
+		if (cityId != null && cityId > 0) {
+			try {
+				return cityDao.borrar(cityId);
+			} catch (InternalException ex) {
+				throw ex;
+			}
+		} else {
+			throw new InternalException("El id e la ciudad no deben ser nulo o vacío.");
+		}
+	}
+
+	public void crearArchivo() throws InternalException {
+		try {
+			List<CityBean> ciudades = this.cityDao.obtenerTodos();
+
+			try(FileWriter writer = new FileWriter("Ciudades.txt")) {
+				for (CityBean ciudad : ciudades) {
+					writer.write(ciudad + System.lineSeparator());
+				}
+			}
+		} catch (InternalException ex) {
+			throw ex;
+		} catch (IOException e) {
+			throw new InternalException("Ócurrio un erro al generar el archivo");
 		}
 	}
 
